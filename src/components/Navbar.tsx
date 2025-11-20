@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
+import axios from 'axios'
+
+interface LoginPopupProps{
+  onClose: () => void;
+  setUser:(name:string)=>void
+}
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -51,7 +57,66 @@ export default Navbar;
 
 const LoginPopup = ({ onClose }: { onClose: () => void }) => {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
+  const [loading,setLoading] = useState(false)
+  const [form,setForm]=useState({
+    name:"",
+    email:"",
+    password:"",
+    cPassword:""
+  })
+  const [user,setUser]=useState("")
+  const [error,setError]=useState("")
 
+
+  const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+    console.log(form);
+    
+    setForm({
+      ...form,
+      [e.target.name]:e.target.value
+    })
+  }
+
+  const handleLogin=async()=>{
+    console.log('ok');
+    
+    setLoading(true)
+    setError("")
+  try {
+    const res = await axios.post("http://localhost:5000/api/user/login",{email:form.email,password:form.password})
+    localStorage.setItem("token",res.data.token)
+     setUser(res.data.message.split(" ")[0]); 
+     alert(`login successful for ${user}`)
+    onClose()
+  } catch (err:unknown) {
+    setError(err.response.data+'')
+    setLoading(false)
+    
+  }
+  }
+
+    const handleRegister=async()=>{
+    setLoading(true)
+    setError("")
+  try {
+    const res = await axios.post("http://localhost:5000/api/user/register",{email:form.email,password:form.password,name:form.name})
+
+    if(res.status===201){
+       setActiveTab("login")
+       alert("registration successful")
+    }else{
+      setError(res.data)
+      alert("registration failed")//we will replace this with toastify
+    }
+   
+    onClose()
+  } catch (err:unknown) {
+    setError(err.response.data+'')
+  
+    
+  }
+    setLoading(false)
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-md w-96 shadow-lg">
@@ -85,15 +150,23 @@ const LoginPopup = ({ onClose }: { onClose: () => void }) => {
             <input
               type="email"
               placeholder="email"
+              name="email"
+              onChange={handleChange}
               className="w-full border p-2 rounded mb-3"
             />
             <input
               type="password"
               placeholder="password"
+              name="password"
+              onChange={handleChange}
               className="w-full border p-2 rounded mb-3"
             />
 
-            <button className="w-full bg-blue-600 text-white py-2 rounded mb-3">
+            <button className="w-full bg-blue-600 text-white py-2 rounded mb-3"
+            onClick={handleLogin}
+                        disabled={loading}
+
+            >
               Login
             </button>
 
@@ -122,25 +195,35 @@ const LoginPopup = ({ onClose }: { onClose: () => void }) => {
             <input
               type="text"
               placeholder="name"
+              onChange={handleChange}
+              name="name"
               className="w-full border p-2 rounded mb-3"
             />
             <input
               type="email"
               placeholder="email"
               className="w-full border p-2 rounded mb-3"
+              onChange={handleChange}
+              name="email"
             />
             <input
               type="password"
+              name="password"
               placeholder="password"
               className="w-full border p-2 rounded mb-3"
+              onChange={handleChange}
             />
             <input
               type="password"
+              name="cPassword"
               placeholder="c-password"
               className="w-full border p-2 rounded mb-3"
+              onChange={handleChange}
             />
 
-            <button className="w-full bg-blue-600 text-white py-2 rounded mb-3">
+            <button className="w-full bg-blue-600 text-white py-2 rounded mb-3"
+            onClick={handleRegister}
+            >
               Sign Up
             </button>
 
