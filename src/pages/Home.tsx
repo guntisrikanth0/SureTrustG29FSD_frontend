@@ -1,4 +1,34 @@
 import React from "react";
+import PostCard from "../components/Post";
+
+
+// interface PostCardProps {
+//   profilePhoto: string;
+//   userName: string;
+//   caption: string;
+//   likes: number;
+//   comments: number;
+//   postImage: string;
+// }
+const dummyPosts = [
+{
+  profilePhoto: "https://randomuser.me/api/portraits/men/32.jpg",
+  userName: "John Doe",
+  caption: "Enjoying the sunny weather!",
+  likes: 120,
+  comments: 15,
+  postImage: "https://img.freepik.com/free-vector/night-landscape-with-lake-mountains-trees-coast-vector-cartoon-illustration-nature-scene-with-coniferous-forest-river-shore-rocks-moon-stars-dark-sky_107791-8253.jpg?semt=ais_hybrid&w=740&q=80",
+},
+{
+  profilePhoto: "https://randomuser.me/api/portraits/women/44.jpg",
+  userName: "Jane Smith",
+  caption: "Delicious homemade meal.",
+  likes: 95,  
+  comments: 8,
+  postImage: "https://images.unsplash.com/photo-1485470733090-0aae1788d5af?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2FsbHBhcGVyJTIwNGt8ZW58MHx8MHx8fDA%3D",
+},
+
+]
 
 const Home = () => {
   return (
@@ -41,6 +71,20 @@ const Home = () => {
             </button>
 
           </div>
+        </div>
+
+        <div className="flex flex-col gap-4 items-center">
+        {dummyPosts.map((post, index) => (
+          <PostCard
+            key={index}
+            profilePhoto={post.profilePhoto}
+            userName={post.userName}
+            caption={post.caption}
+            likes={post.likes}
+            comments={post.comments}
+            postImage={post.postImage}
+          />
+        ))}
         </div>
 
       </div>
