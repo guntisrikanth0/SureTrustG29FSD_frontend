@@ -1,10 +1,26 @@
 import React, { useState } from "react";
 import PostCard from "../components/Post";
 import axios from "axios";
+import { baseUrl } from "../baseUrl";
+
+// {
+//     "friends": [
+//         {
+//             "_id": "691f315c3fc2a314dec44345",
+//             "email": "pk2@gmail.com"
+//         }
+//     ]
+// }
+interface Friend {
+  _id: string;
+  name: string;
+  email: string;
+}
 
 const Home = () => {
   const [text, setText] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [friends,setFriends] = useState<Friend[]>([]);
 
   const [posts, setPosts] = useState([
     {
@@ -85,6 +101,26 @@ const Home = () => {
     }
   };
 
+  const fetchFriends = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await axios.get(`${baseUrl}/friendrequest/getFriends`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFriends(res.data.friends);
+      console.log(res.data.friends);
+      
+    } catch (error) {
+      // Handle/log error if needed
+      console.error("Failed to fetch friends", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchFriends();
+  }, []);
+
   return (
     <div className="w-full h-screen bg-gray-300 flex">
       {/* LEFT PANEL */}
@@ -158,9 +194,17 @@ const Home = () => {
       <div className="w-1/5 bg-gray-100 border-2 p-4">
         <h2 className="text-xl font-bold mb-4">Friends</h2>
         <ul className="space-y-4">
-          <li className="mb-2 p-2 bg-white rounded shadow">Alice</li>
-          <li className="mb-2 p-2 bg-white rounded shadow">Bob</li>
-          <li className="mb-2 p-2 bg-white rounded shadow">Charlie</li>
+
+          {friends.map((friend) => (
+            <li
+              key={friend._id}
+              className="mb-2 p-2 bg-white rounded shadow"
+            >
+              {friend.name}
+            </li>
+          ))}
+          {/* <li className="mb-2 p-2 bg-white rounded shadow">Alice</li> */}
+       
         </ul>
       </div>
     </div>
