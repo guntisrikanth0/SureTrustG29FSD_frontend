@@ -1,4 +1,5 @@
 import react from 'react';
+import { Link } from "react-router-dom";
 import PostCard from '../components/Post';
 import axios from 'axios';
 
@@ -75,22 +76,27 @@ alert(`Profile picture updated successfully,${res.data.post}`);
     <h2 className="text-xl font-bold mb-6">
       Profile
     </h2>
-    <ul className="space-y-4 te">
-      <li className="cursor-pointer hover:text-blue-600">
-        My Posts
-      </li>
-    
-           <li className="cursor-pointer hover:text-blue-600">
-        Liked Posts
-          </li>
-           <li className="cursor-pointer hover:text-blue-600">
-        Deleted Posts
-          </li>
-          
-            <li className="cursor-pointer hover:text-blue-600">
-        Settings
-          </li>
-    </ul>
+<ul className="space-y-4 te">
+  <li className="cursor-pointer hover:text-blue-600">
+    {/* go to profile page */}
+    <Link to="/profile">My Posts</Link>
+  </li>
+
+  <li className="cursor-pointer hover:text-blue-600">
+    {/* go to liked posts page */}
+    <Link to="/liked-posts">Liked Posts</Link>
+  </li>
+
+  <li className="cursor-pointer hover:text-blue-600">
+    {/* go to deleted posts page */}
+    <Link to="/deleted-posts">Deleted Posts</Link>
+  </li>
+
+  <li className="cursor-pointer hover:text-blue-600">
+    Settings
+  </li>
+</ul>
+
     </div>
     {/* middle panel */}
     <div className="w-3/5 p-4 space-y-4 overflow-y-auto h-screen">
