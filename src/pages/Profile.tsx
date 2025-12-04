@@ -172,7 +172,7 @@ const Profile = () => {
               profilePhoto={
                 post.user?.profilePic || 'https://via.placeholder.com/150'
               }
-              userName={post.user?.username || 'Unknown User'}
+              userName={post.user?.name || 'Unknown User'}
               caption={post.text}
               likes={post.likes?.length || 0}
               comments={post.comments?.length || 0}
