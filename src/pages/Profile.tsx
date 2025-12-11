@@ -177,6 +177,7 @@ const Profile = () => {
               likes={post.likes?.length || 0}
               comments={post.comments?.length || 0}
               postImage={post.image}
+              id={post._id}
             />
           ))}
         </div>
