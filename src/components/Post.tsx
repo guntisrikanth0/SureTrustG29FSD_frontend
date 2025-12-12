@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 
 interface PostCardProps {
@@ -7,6 +8,7 @@ interface PostCardProps {
   likes: number;
   comments: number;
   postImage: string;
+  id?: string;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -16,10 +18,36 @@ const PostCard: React.FC<PostCardProps> = ({
   likes,
   comments,
   postImage,
+  id,
 }) => {
+  const handleLikedPosts = async () => {
+  try {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('You are not logged in');
+      return;
+    }
+
+    const res = await axios.post(
+      `http://localhost:5000/api/post/like/${id}`,
+      {}, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert('Post liked successfully!');
+    window.location.reload();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
   return (
     <div className="w-full max-w-xl bg-white rounded-xl shadow-md p-4">
-      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -59,7 +87,12 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {/* Buttons */}
       <div className="flex justify-around mt-4">
-        <button className="text-xl hover:scale-110 transition">👍</button>
+        <button
+          className="text-xl hover:scale-110 transition"
+          onClick={handleLikedPosts}
+        >
+          👍
+        </button>
         <button className="text-xl hover:scale-110 transition">💬</button>
         <button className="text-xl hover:scale-110 transition">↗️</button>
       </div>
