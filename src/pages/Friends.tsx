@@ -73,7 +73,7 @@ const Friends = () => {
           <div>
             <h2 className="text-2xl font-semibold mb-4">Pending Requests</h2>
             <ul className="space-y-3">
-              {friendRequests.map((request) => (
+              {friendRequests.length>0&&friendRequests.map((request) => (
                 <li
                   key={request._id}
                 >
