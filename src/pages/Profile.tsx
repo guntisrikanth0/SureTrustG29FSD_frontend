@@ -23,6 +23,7 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(res.data);
+        localStorage.setItem('name', res.data.user.name || '');
       } catch (err) {
         setError('Failed to load profile.');
       } finally {
@@ -172,7 +173,7 @@ const Profile = () => {
               profilePhoto={
                 post.user?.profilePic || 'https://via.placeholder.com/150'
               }
-              userName={post.user?.name || 'Unknown User'}
+              userName={localStorage.getItem('name') || 'Unknown User'}
               caption={post.text}
               likes={post.likes?.length || 0}
               comments={post.comments?.length || 0}
