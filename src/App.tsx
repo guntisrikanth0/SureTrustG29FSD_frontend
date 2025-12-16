@@ -12,6 +12,7 @@ import LikedPosts from "./pages/LikedPosts";
 import DeletedPosts from "./pages/DeletedPosts";
 import FriendProfile from './pages/FriendProfilepage'
 import Settings from "./pages/Settings";
+import Chatpopup from './components/Chatpopup'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           {/* 404 last */}
           <Route path="*" element={<Error />} />
         </Routes>
+        <Chatpopup/>
       </BrowserRouter>
     </>
   )

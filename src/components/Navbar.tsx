@@ -144,6 +144,9 @@ const LoginPopup = ({ onClose }: { onClose: () => void }) => {
       localStorage.setItem("token", res.data.token);
       setUser(res.data.message.split(" ")[0]);
       alert(`login successful for ${user}`);
+      console.log(res.data);
+      localStorage.removeItem("profilePic");
+      localStorage.setItem("profilePic", res.data.profilePic);
       onClose();
     } catch (err: unknown) {
       setError(err.response.data + "");

@@ -1,11 +1,143 @@
-import React from 'react'
+import { useState } from "react";
+import { Image as ImageIcon } from "lucide-react";
 
-const Chatwindow = () => {
-  return (
-    <div>
-      Chatwindow
-    </div>
-  )
+interface Message {
+  id: string;
+  sender: "me" | "friend";
+  content: string;
 }
 
-export default Chatwindow
+const dummyFriends = [
+  { _id: "1", name: "Rahul" },
+  { _id: "2", name: "Priya" },
+  { _id: "3", name: "Ajay" },
+];
+
+const dummyMessages: Record<string, Message[]> = {
+  "1": [
+    { id: "m1", sender: "friend", content: "Hey bro!" },
+    { id: "m2", sender: "me", content: "Hi Rahul 👋" },
+  ],
+  "2": [
+    { id: "m3", sender: "friend", content: "Are you coming today?" },
+  ],
+  "3": [],
+};
+
+const ChatWindow = ({ onClose }: { onClose: () => void }) => {
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [text, setText] = useState("");
+
+  const handleSelectUser = (user: any) => {
+    setSelectedUser(user);
+    setMessages(dummyMessages[user._id] || []);
+  };
+
+  const handleSend = () => {
+    if (!text.trim()) return;
+
+    const newMsg: Message = {
+      id: Date.now().toString(),
+      sender: "me",
+      content: text,
+    };
+
+    setMessages((prev) => [...prev, newMsg]);
+    setText("");
+  };
+
+  return (
+    <div className="w-[320px] h-[400px] bg-white rounded-lg shadow-2xl flex flex-col">
+      {/* Header */}
+      <div className="bg-gray-800 text-white px-4 py-2 flex justify-between items-center">
+        <span className="font-semibold">
+          {selectedUser ? selectedUser.name : "Chats"}
+        </span>
+        <button onClick={onClose}>✕</button>
+      </div>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Friends */}
+        <div className="w-1/3 border-r text-sm overflow-y-auto">
+          {dummyFriends.map((user) => (
+            <div
+              key={user._id}
+              onClick={() => handleSelectUser(user)}
+              className={`p-2 cursor-pointer hover:bg-gray-100 ${
+                selectedUser?._id === user._id
+                  ? "bg-gray-200 font-bold"
+                  : ""
+              }`}
+            >
+              {user.name}
+            </div>
+          ))}
+        </div>
+
+        {/* Messages */}
+        <div className="w-2/3 flex flex-col">
+          <div className="flex-1 p-3 space-y-2 overflow-y-auto text-sm">
+            {selectedUser ? (
+              messages.length > 0 ? (
+                messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex ${
+                      msg.sender === "me"
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                  >
+                    <div
+                      className={`px-3 py-2 rounded-lg max-w-[80%] ${
+                        msg.sender === "me"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center">
+                  No messages yet
+                </p>
+              )
+            ) : (
+              <p className="text-gray-500 text-center">
+                Select a friend
+              </p>
+            )}
+          </div>
+
+          {/* Input */}
+          {selectedUser && (
+            <div className="p-2 border-t flex items-center gap-1">
+              {/* <input type="file" /> */}
+              <button className="p-2 text-gray-500">
+                <ImageIcon size={18} />
+              </button>
+              <input
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                className="flex-1 border rounded px-2 py-1 text-sm"
+                placeholder="Type a message"
+              />
+              <button
+                onClick={handleSend}
+                className="bg-blue-500 text-white px-3 rounded"
+              >
+                Send
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChatWindow;
