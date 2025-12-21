@@ -23,7 +23,7 @@ const ChatWindow = ({ onClose }) => {
 
   socket.on("receive_message", (msg) => {
     //show event
-    console.log(msg);
+    console.log(msg,'kokoko');
     
     setMessages((prev) => [...prev, formatMessage(msg)]);
   });
@@ -76,7 +76,12 @@ const ChatWindow = ({ onClose }) => {
       to: selectedUser._id,
       message: text,
     });
-
+const name=localStorage.getItem("name")
+  const newMessage = {
+   content:text,
+   sender:"me"
+  };
+setMessages((prev)=>[...prev,newMessage])
     setText("");
   };
 
@@ -168,7 +173,8 @@ const ChatWindow = ({ onClose }) => {
 export default ChatWindow;
 
 const formatMessage = (msg) => ({
+ 
   id: msg._id,
-  sender: msg.from._id === localStorage.getItem("userId") ? "me" : "friend",
+  sender: msg.from.name === localStorage.getItem("name") ? "me" : "friend",
   content: msg.message,
 });
