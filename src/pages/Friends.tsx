@@ -140,6 +140,54 @@ const Friends = () => {
         {renderContent()}
       </div>
 
+            {friendRequests.length === 0 ? (
+              <p>No pending requests</p>
+            ) : (
+              <ul className="space-y-4">
+                {friendRequests.map((request) => (
+                  <li key={request._id}>
+                    <ProfileCard
+                      name={request.from.name}
+                      image={
+                        request.from.profilePic ||
+                        "https://via.placeholder.com/150"
+                      }
+                      onAccept={() =>
+                        handleRequestAction(request._id, "accepted")
+                      }
+                      onReject={() =>
+                        handleRequestAction(request._id, "rejected")
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+
+        {activeTab === "rejected" && (
+          <>
+            <h2 className="text-2xl font-semibold mb-4">Rejected Requests</h2>
+
+            {rejectedRequests.length === 0 ? (
+              <p>No rejected requests</p>
+            ) : (
+              <ul className="space-y-3">
+                {rejectedRequests.map((req) => (
+                  <li
+                    key={req._id}
+                    className="bg-red-100 p-4 rounded shadow"
+                  >
+                    <p className="font-semibold">{req.from.name}</p>
+                    <p className="text-sm text-gray-600">{req.from.email}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
