@@ -128,7 +128,7 @@ const Home: React.FC = () => {
       }
 
       const res = await axios.get(
-        `${baseUrl}/user/feed?page=${pageNum}&limit=5`,
+        `${baseUrl}/post/feed?page=${pageNum}&limit=5`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
