@@ -30,7 +30,7 @@ const Profile: React.FC = () => {
         if (!token) throw new Error("No token");
 
         const res = await axios.get(
-          "http:/${baseUrl}/user/me",
+          "${baseUrl}/user/me",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
