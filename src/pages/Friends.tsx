@@ -11,7 +11,7 @@ const Friends = () => {
   // 1. Fetch Friend Requests
   const getFriendRequests = async () => {
     try {
-      const api = "http://localhost:5000/api/friendrequest/getfriendrequests";
+      const api = "http:/${baseUrl}/friendrequest/getfriendrequests";
       const token = localStorage.getItem("token");
       if (!token) return;
       
@@ -27,7 +27,7 @@ const Friends = () => {
   // 2. Fetch All Friends
   const getAllFriends = async () => {
     try {
-      const api = "http://localhost:5000/api/friendrequest/getAllFriends";
+      const api = "${baseUrl}/friendrequest/getAllFriends";
       const token = localStorage.getItem("token");
       if (!token) return;
 
@@ -49,7 +49,7 @@ const handleRequestAction = async (
       if (!token) return;
 
       await axios.post(
-        "http://localhost:5000/api/friendrequest/stauschange",
+        "${baseUrl}/friendrequest/stauschange",
         { requestId, status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
