@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
+import { getUnreadNotificationCount } from "../api/notificationApi.ts"
+import { baseUrl } from "../baseUrl";
+import Logo from "../assets/logo.png";
 
 interface User {
   _id: string;
@@ -23,6 +26,7 @@ const Navbar: React.FC = () => {
   const [results, setResults] = useState<User[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
   console.log(isLoginPage);
@@ -32,7 +36,7 @@ const Navbar: React.FC = () => {
   const searchUser = async (query: string) => {
     try {
       const res = await axios.get<{ users: User[] }>(
-        `http://localhost:5000/api/user/search/${query}`
+        `${baseUrl}/user/search/${query}`
       );
       if (res.data.users) {
         setResults(res.data.users);
@@ -55,6 +59,20 @@ const Navbar: React.FC = () => {
     return () => clearTimeout(timer);
   }, [searchText]);
 
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      if (!isLoginPage) {
+        try {
+          const res = await getUnreadNotificationCount();
+          setUnreadCount(res.data.unreadCount);
+        } catch (error) {
+          console.error("Error fetching unread count:", error);
+        }
+      }
+    };
+    fetchUnreadCount();
+  }, [isLoginPage, location.pathname]);
+
   const handleSelectUser = (userId: string) => {
     setShowDropdown(false);
     setSearchText("");
@@ -67,10 +85,10 @@ const Navbar: React.FC = () => {
       <nav className="w-full h-13 bg-linear-to-r from-red-600 via-red-500 to-rose-500 shadow-lg border-b border-red-700/30 flex items-center justify-between px-6 sticky top-0 z-50">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="w-10 h-10 bg-linear-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
-            <span className="text-white font-bold text-xl">S</span>
+            <img src={Logo} alt="Logo" className="w-10 h-10 rounded-full flex items-center justify-center" />
           </div>
           <h1 className="font-bold text-2xl text-white tracking-tight hidden sm:block">
-            SMA
+            PulseNet    
           </h1>
         </Link>
 
@@ -139,7 +157,15 @@ const Navbar: React.FC = () => {
                   </div>
                 )}
               </div>
-
+                {user && (
+                  <div className="relative">
+                    <img
+                      src={localStorage.getItem("profilePic") || ""}
+                      className="w-11 h-11 rounded-full object-cover ring-2 ring-red-100"
+                    />  
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  </div>
+                )}
               {/* Navigation Icons */}
               <div className="flex items-center gap-4">
                 {/* Notification Icon */}
@@ -160,9 +186,11 @@ const Navbar: React.FC = () => {
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                     />
                   </svg>
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-linear-to-br from-amber-400 to-yellow-600 rounded-full text-white text-xs font-bold flex items-center justify-center shadow-md">
-                    3
-                  </span>
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-linear-to-br from-amber-400 to-yellow-600 rounded-full text-white text-xs font-bold flex items-center justify-center shadow-md">
+                      {unreadCount}
+                    </span>
+                  )}
                 </Link>
 
                 {/* Profile Icon */}
@@ -230,13 +258,14 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, setUser }) => {
         token: string;
         message: string;
         profilePic: string;
-      }>("http://localhost:5000/api/user/login", {
+      }>(`${baseUrl}/user/login`, {
         email: form.email,
         password: form.password,
       });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("profilePic", res.data.profilePic);
+      localStorage.setItem("loginTime", Date.now().toString());
 
       const userName = res.data.message.split(" ")[0];
       setUser(userName);
@@ -266,7 +295,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, setUser }) => {
 
     try {
       const res = await axios.post<{ message: string }>(
-        "http://localhost:5000/api/user/register",
+        `${baseUrl}/user/register`,
         {
           email: form.email,
           password: form.password,
@@ -298,7 +327,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ onClose, setUser }) => {
           <div className="w-12 h-12 bg-linear-to-br from-amber-400 to-yellow-600 rounded-full mx-auto mb-2 flex items-center justify-center shadow-lg">
             <span className="text-white font-bold text-xl">S</span>
           </div>
-          <h2 className="text-xl font-bold text-white">Welcome to SMA</h2>
+          <h2 className="text-xl font-bold text-white">Welcome to PulseNet</h2>
         </div>
 
         {/* Scrollable Content */}

@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl } from "../baseUrl";
 import { Link } from "react-router-dom";
 
+
 interface Friend {
   _id: string;
   name: string;
@@ -76,26 +77,27 @@ const Home: React.FC = () => {
         }
       } catch (err) {
         console.error("Sync failed", err);
+        
       }
     };
     syncUser();
   }, []);
 
   // Global post update function
-  const handleUpdatePost = (updatedPostFromDB: Post) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) => {
-        if (post._id === updatedPostFromDB._id) {
-          return {
-            ...post,
-            likes: updatedPostFromDB.likes,
-            comments: updatedPostFromDB.comments,
-          };
-        }
-        return post;
-      })
-    );
-  };
+  // const handleUpdatePost = (updatedPostFromDB: Post) => {
+  //   setPosts((prevPosts) =>
+  //     prevPosts.map((post) => {
+  //       if (post._id === updatedPostFromDB._id) {
+  //         return {
+  //           ...post,
+  //           likes: updatedPostFromDB.likes,
+  //           comments: updatedPostFromDB.comments,
+  //         };
+  //       }
+  //       return post;
+  //     })
+  //   );
+  // };
 
   // Delete post function
   const handleDeletePostFromHome = async (postId: string) => {
@@ -424,10 +426,10 @@ const Home: React.FC = () => {
               <img
                 src={myProfilePic}
                 alt="Profile"
-                className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-md flex-shrink-0 ring-2 ring-gray-200"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-md shrink-0 ring-2 ring-gray-200"
               />
             ) : (
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-linear-to-br from-red-500 to-rose-500 rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-linear-to-br from-red-500 to-rose-500 rounded-full flex items-center justify-center shadow-md shrink-0">
                 <span className="text-white font-bold text-base md:text-lg">
                   U
                 </span>
@@ -554,7 +556,7 @@ const Home: React.FC = () => {
                   comments={post.comments}
                   comments_count={post.comments?.length || 0}
                   postImage={post.image}
-                  onUpdate={handleUpdatePost}
+                  // onUpdate={handleUpdatePost}
                   onDelete={handleDeletePostFromHome}
                   isProfilePage={false}
                 />
