@@ -73,7 +73,7 @@ const Settings: React.FC = () => {
     setLoadingGeneral(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`http://localhost:5000/api/user/update`, 
+      const res = await axios.put(`${baseUrl}/api/user/update`, 
         { name, email, password: confirmForUpdate },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -96,7 +96,7 @@ const Settings: React.FC = () => {
     setLoadingPassword(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post(`http://localhost:5000/api/user/change-password`, 
+      const res = await axios.post(`${baseUrl}/user/change-password`, 
         { oldPassword: currentPassword, newPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );
