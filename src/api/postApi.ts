@@ -1,16 +1,18 @@
-import { baseUrl } from "../baseUrl.ts";
+import { baseUrl } from "../baseUrl";
 
 export const getDeletedPosts = async (page = 1, limit = 10) => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No token found");
 
-  const response = await fetch(`${baseUrl}/post/deletedposts?page=${page}&limit=${limit}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `${baseUrl}/post/deletedposts?page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch deleted posts");
@@ -19,17 +21,19 @@ export const getDeletedPosts = async (page = 1, limit = 10) => {
   return await response.json();
 };
 
-export const restorePost = async (postId:string) => {
+export const restorePost = async (postId: string) => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No token found");
 
-  const response = await fetch(`${baseUrl}/post/restore/${postId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `${baseUrl}/post/restore/${postId}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to restore post");
@@ -42,13 +46,15 @@ export const deletePost = async (postId: string) => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No token found");
 
-  const response = await fetch(`${baseUrl}/post/delete/${postId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `${baseUrl}/post/${postId}`,   // ✅ FIXED
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to delete post");
