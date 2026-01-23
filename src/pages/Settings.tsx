@@ -73,7 +73,7 @@ const Settings: React.FC = () => {
     setLoadingGeneral(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`${baseUrl}/api/user/update`, 
+      const res = await axios.put(`${baseUrl}/user/update`, 
         { name, email, password: confirmForUpdate },
         { headers: { Authorization: `Bearer ${token}` } }
       );

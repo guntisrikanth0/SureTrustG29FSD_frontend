@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-import { getUnreadNotificationCount } from "../api/notificationApi.ts"
+import { getUnreadNotificationCount } from "../api/notificationApi.js"
 import { baseUrl } from "../baseUrl";
 import Logo from "../assets/logo.png";
 
